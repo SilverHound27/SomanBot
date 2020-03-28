@@ -22,7 +22,7 @@ def afk(bot: Bot, update: Update):
         reason = ""
 
     sql.set_afk(update.effective_user.id, reason)
-    update.effective_message.reply_text("{} is away from the keyboard ! ".format(update.effective_user.first_name))
+    update.effective_message.reply_text("{} , ആ കൈയ്യും കൊണ്ട് പോയി രണ്ട് വാണം വിട്ടോ".format(update.effective_user.first_name))
 
 
 @run_async
@@ -34,7 +34,7 @@ def no_longer_afk(bot: Bot, update: Update):
 
     res = sql.rm_afk(user.id)
     if res:
-        update.effective_message.reply_text("{} Not far from the keyboard now !".format(update.effective_user.first_name))
+        update.effective_message.reply_text("{},കൈ വാണം വിടാൻ മാത്രം അല്ല കേട്ടോ!".format(update.effective_user.first_name))
 
 
 @run_async
@@ -59,12 +59,13 @@ def reply_afk(bot: Bot, update: Update):
                 return
 
             if sql.is_afk(user_id):
-                user = sql.check_afk_status(user_id)
-                if not user.reason:
-                    res = "{} is away from the keyboard ! reason :\n{} ".format(fst_name)
-                else:
-                    res = "{} is away from the keyboard ! reason :\n{}. ".format(fst_name, user.reason)
-                message.reply_text(res)
+                valid, reason = sql.check_afk_status(user_id)
+                if valid:
+                    if not reason:
+                        res = "{} , ആ കൈയ്യും കൊണ്ട് പോയി രണ്ട് വാണം വിട്ടോ".format(fst_name)
+                    else:
+                        res = "{} is AFK! says its because of:\n{}".format(fst_name, reason)
+                    message.reply_text(res)
 
 
 __help__ = """
